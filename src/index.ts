@@ -11,18 +11,12 @@ async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
   const color = (code: string, value: string): string =>
     process.stdout.isTTY ? `\u001b[${code}m${value}\u001b[0m` : value;
-  const logo = [
-    " _   _   __ _   ___   ___   ___   ____  _   _",
-    "| \\ | | / _` | / __| / _ \\ / __| / ___|| | | |",
-    "|  \\| || (_| || (__ | (_) |\\__ \\| |    | |_| |",
-    "|_|\\__| \\__,_| \\___| \\___/ |___/ \\____| \\__,_|"
-  ];
   console.log("");
-  console.log(color("31", logo[0]));
-  console.log(color("90", logo[1]));
-  console.log(color("97", logo[2]));
-  console.log(color("31", logo[3]));
-  console.log(color("90", "                 SECURITY RESEARCH CLI"));
+  console.log(color("31", "  +------------------------------------------------------+"));
+  console.log(color("31", "  |") + color("90", "                                                      ") + color("31", "|"));
+  console.log(color("31", "  |   ") + color("31;1", "N A S E R") + color("90;1", " 2 ") + color("97;1", "S H E L L") + color("31", "                         |"));
+  console.log(color("31", "  |") + color("90", "       AUTHORIZED SECURITY RESEARCH CLI               ") + color("31", "|"));
+  console.log(color("31", "  +------------------------------------------------------+"));
   console.log("");
   console.log("1) LOCAL");
   console.log("2) DOMAIN");
