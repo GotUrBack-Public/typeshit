@@ -1,14 +1,14 @@
 # Naser2Shell
 
-TypeScript-Tool zum strukturierten Auswerten der ZeroDay-Library. Aktive, zustandsändernde oder belastende PoCs werden nicht ausgeführt.
+TypeScript-Tool zur Auswertung der ZeroDay-Library. Aktive, zustandsändernde und belastende PoCs werden nicht ausgeführt.
 
 ## Termux
 
 ```sh
 pkg update && pkg install nodejs git
 git clone https://github.com/GotUrBack-Public/typeshit.git
-cd typeshit
-npm install
+cd typeshit && npm install
+git clone https://github.com/GotUrBack-Public/ZeroDay-Library-naser.solutions-23.11.2026.git ../ZeroDay-Library-naser.solutions-23.11.2026
 npm start
 ```
 
@@ -17,20 +17,11 @@ npm start
 ```sh
 sudo apt install nodejs npm git
 git clone https://github.com/GotUrBack-Public/typeshit.git
-cd typeshit
-npm install
+cd typeshit && npm install
+git clone https://github.com/GotUrBack-Public/ZeroDay-Library-naser.solutions-23.11.2026.git ../ZeroDay-Library-naser.solutions-23.11.2026
 npm start
 ```
 
-## Research-Library
+LOCAL fragt nach dem lokalen Projektpfad. DOMAIN fragt vor jedem Lauf nach einer ausdrücklichen Autorisierung; nur die Eingabe `JA` startet die Prüfung. Abbrüche werden protokolliert. Reports liegen in `reports/`.
 
-Lege die Library neben Naser2Shell oder gib ihren Pfad beim Start an:
-
-```sh
-git clone https://github.com/GotUrBack-Public/ZeroDay-Library-naser.solutions-23.11.2026.git
-npm start
-```
-
-Im Menü LOCAL oder DOMAIN wählen. DOMAIN benötigt vor jedem Lauf die ausdrückliche Eingabe `JA`. Ohne Bestätigung wird abgebrochen. Ergebnisse landen unter `reports/`.
-
-DOMAIN-Prüfungen beschränken sich auf eine einzelne HEAD-Anfrage und die Auswertung sicherer HTTP-Header. Gefährliche PoCs, Login-Versuche, Uploads, Formularübermittlungen, Race- und Lasttests werden nicht ausgeführt.
+DOMAIN führt nur eine einzelne HEAD-Anfrage und eine passive Header-Auswertung aus. Login-Versuche, Uploads, Formularübermittlungen, CSRF-Aktionen, Race- und Lasttests sowie andere zustandsändernde PoCs werden blockiert.
