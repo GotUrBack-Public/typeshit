@@ -18,11 +18,26 @@ async function main(): Promise<void> {
   console.log(color("31", "  |") + color("90", "       AUTHORIZED SECURITY RESEARCH CLI               ") + color("31", "|"));
   console.log(color("31", "  +------------------------------------------------------+"));
   console.log("");
-  console.log("1) LOCAL");
-  console.log("2) DOMAIN");
-  const choice = await ask("Modus: ");
-  if (choice !== "1" && choice !== "2") throw new Error("Ungültige Auswahl.");
-  const mode: Mode = choice === "1" ? "LOCAL" : "DOMAIN";
+  const args = process.argv.slice(2);
+  const valueAfter = (flag: string): string | undefined => {
+    const index = args.indexOf(flag);
+    return index >= 0 ? args[index + 1] : undefined;
+  };
+  const allMode = args.includes("--all");
+  const targetArg = valueAfter("--target");
+  let mode: Mode;
+  if (targetArg && allMode) {
+    mode = "DOMAIN";
+    console.log("Modus: vollständiger DOMAIN-Lauf (--all)");
+  } else if (args.length === 0) {
+    console.log("1) LOCAL");
+    console.log("2) DOMAIN");
+    const choice = await ask("Modus: ");
+    if (choice !== "1" && choice !== "2") throw new Error("Ungültige Auswahl.");
+    mode = choice === "1" ? "LOCAL" : "DOMAIN";
+  } else {
+    throw new Error("Verwendung: npm start -- --target https://example.com --all");
+  }
   let target = "local";
   let sourceRoot: string | undefined;
   let authorization: AuthorizationRecord = {
@@ -33,7 +48,7 @@ async function main(): Promise<void> {
     confirmedAt: null
   };
   if (mode === "DOMAIN") {
-    const url = normalizeDomain(await ask("Zieldomain: "));
+    const url = normalizeDomain(targetArg ?? await ask("Zieldomain: "));
     target = url.origin;
     authorization = {
       required: true,
@@ -77,11 +92,12 @@ async function main(): Promise<void> {
     if (!existsSync(sourceRoot)) throw new Error("Lokaler Projektpfad nicht gefunden.");
   }
   const defaultResearch = path.resolve("../ZeroDay-Library-naser.solutions-23.11.2026/english");
-  const researchInput = await ask(`Pfad zur Research-Library [${defaultResearch}]: `);
+  const researchInput = valueAfter("--research") ?? await ask(`Pfad zur Research-Library [${defaultResearch}]: `);
   const researchRoot = path.resolve(researchInput || defaultResearch);
   if (!existsSync(researchRoot)) throw new Error(`Research-Pfad nicht gefunden: ${researchRoot}`);
   const docs = await loadResearch(researchRoot);
   if (!docs.length) throw new Error("Keine Markdown-Dateien in der Research-Library gefunden.");
+  console.log(`\nStarte sequenzielle Prüfung aller ${docs.length} Research-Dateien / Findings...\`);
   const results = await runChecks(mode, target, docs, sourceRoot);
   const report: RunReport = {
     tool: "Naser2Shell",
