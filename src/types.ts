@@ -1,5 +1,5 @@
 export type Mode = "LOCAL" | "DOMAIN";
-export type Status = "PASS" | "FINDING" | "REVIEW_REQUIRED" | "BLOCKED" | "ERROR";
+export type Status = "PASS" | "FINDING" | "REVIEW_REQUIRED" | "BLOCKED" | "ERROR" | "CONFIRMED" | "NOT_REPRODUCIBLE";
 export interface ResearchDocument {
   finding: string;
   file: string;
