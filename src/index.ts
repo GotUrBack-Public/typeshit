@@ -120,12 +120,24 @@ async function main(): Promise<void> {
   const researchInput = configuredResearch ?? (existsSync(defaultResearch) ? defaultResearch : await ask(`Pfad zur Research-Library [${defaultResearch}]: `));
   const researchRoot = path.resolve(researchInput || defaultResearch);
   if (!existsSync(researchRoot)) throw new Error(`Research-Pfad nicht gefunden: ${researchRoot}`);
+  console.log("\\nReading Library's...");
   const docs = await loadResearch(researchRoot);
   if (!docs.length) throw new Error("Keine Markdown-Dateien in der Research-Library gefunden.");
-  console.log(`\nStarte sequenzielle Prüfung aller ${docs.length} Research-Dateien / Findings...`);
+  const zeroDayIds = [...new Set(docs.map(doc => doc.finding.match(/^(\\d{3})/)?.[1]).filter((id): id is string => Boolean(id)))].sort();
+  if (zeroDayIds.length !== 11) {
+    throw new Error(`Erwartet wurden 11 ZeroDays, gefunden wurden ${zeroDayIds.length}. Research-Library prüfen.`);
+  }
+  console.log(`\\n11 ZeroDays found!\\n`);
+  console.log("Making a Plan...\\n");
+  console.log(`Start exploiting ${target}\\n`);
   const progress = mode === "DOMAIN" ? createProgress(11) : undefined;
-  if (progress) console.log("\n\n\n\n\n\n");
-  const results = await runChecks(mode, target, docs, sourceRoot, progress ? result => progress(result.finding, result.title, result.status) : undefined);
+  if (progress) console.log("\\n\\n\\n\\n\\n\\n");
+  let exploitIndex = 0;
+  const results = await runChecks(mode, target, docs, sourceRoot, progress ? result => {
+    exploitIndex++;
+    console.log(`Exploiting ${exploitIndex}/11`);
+    progress(result.finding, result.title, result.status);
+  } : undefined);
   const report: RunReport = {
     tool: "Naser2Shell",
     startedAt,
@@ -137,9 +149,18 @@ async function main(): Promise<void> {
     results
   };
   const base = await saveReport(report);
-  console.log("\nErgebnis");
+  const successful = results.filter(result => result.status === "CONFIRMED").length;
+  console.log(`\\n${successful}/11 exploits were successful.\\n`);
+  console.log("Findings:");
+  const findingsFound = results.filter(result => ["CONFIRMED", "FINDING", "POTENTIAL"].includes(result.status));
+  if (!findingsFound.length) console.log("Keine bestätigten oder potenziellen Findings gemeldet.");
+  for (const result of findingsFound) {
+    console.log(`[${result.status}] ${result.finding} ${result.title}`);
+    console.log(`  ${result.detail}`);
+  }
+  console.log("\\nAll checks:");
   for (const result of results) console.log(`[${result.status}] ${result.finding} ${result.title}`);
-  console.log(`\nReport: ${base}.md`);
+  console.log(`\\nReport: ${base}.md`);
 }
 
 main().catch(error => {
