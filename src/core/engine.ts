@@ -14,7 +14,7 @@ const findings = [
   ["008", "JWT ohne Client-Bindung", "REVIEW_REQUIRED", "Erfordert autorisierte Architektur- und Konfigurationsprüfung; kein Token-Replay."],
   ["009", "Feedback Lost Update", "BLOCKED", "Keine parallelen schreibenden Requests oder Race-Tests."],
   ["010", "CMS-Origin-Allowlist", "REVIEW_REQUIRED", "Lokale Prüfung der Origin-Konfiguration."],
-  ["011", "Fehlende Security-Header", "REVIEW_REQUIRED", "Bei DOMAIN nur passive Header-Auswertung per einzelner HEAD-Anfrage."]
+  ["011", "Fehlende Security-Header", "REVIEW_REQUIRED", "Bei DOMAIN begrenzte passive GET-Prüfung der Startseite und definierter Metadatenpfade."]
 ] as const;
 
 async function sourceFiles(root: string): Promise<string[]> {
@@ -92,5 +92,8 @@ export async function runChecks(mode: Mode, target: string, docs: ResearchDocume
     return results.map(item => local.find(check => check.finding === item.finding) ?? item);
   }
   const domainResults = await checkDomain(new URL(target));
-  return results.map(item => domainResults.find(check => check.finding === item.finding) ?? item);
+  return [
+    ...results.map(item => domainResults.find(check => check.finding === item.finding) ?? item),
+    ...domainResults.filter(check => !results.some(item => item.finding === check.finding))
+  ];
 }
