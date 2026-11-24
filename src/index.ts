@@ -9,7 +9,7 @@ import type { AuthorizationRecord, Mode, RunReport } from "./types.js";
 
 async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
-  console.log("\\nNaser2Shell");
+  console.log("\nNaser2Shell");
   console.log("1) LOCAL");
   console.log("2) DOMAIN");
   const choice = await ask("Modus: ");
@@ -34,7 +34,7 @@ async function main(): Promise<void> {
       domain: url.hostname,
       confirmedAt: null
     };
-    console.log("\\nAUTORISIERUNG ERFORDERLICH");
+    console.log("\nAUTORISIERUNG ERFORDERLICH");
     console.log(`Ziel: ${url.origin}`);
     const answer = await ask("Bist du Eigentümer oder ausdrücklich zur Prüfung autorisiert? Tippe JA: ");
     if (answer !== "JA") {
@@ -80,9 +80,9 @@ async function main(): Promise<void> {
     results
   };
   const base = await saveReport(report);
-  console.log("\\nErgebnis");
+  console.log("\nErgebnis");
   for (const result of results) console.log(`[${result.status}] ${result.finding} ${result.title}`);
-  console.log(`\\nReport: ${base}.md`);
+  console.log(`\nReport: ${base}.md`);
 }
 
 main().catch(error => {
