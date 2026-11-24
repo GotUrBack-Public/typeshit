@@ -2,6 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import type { CheckResult, Mode, ResearchDocument } from "../types.js";
 import { checkDomain } from "./domain-check.js";
+import { runLiveProofs } from "./proof-engine.js";
 
 const findings = [
   ["001", "Payload Secret leerer Standardwert", "REVIEW_REQUIRED", "Quellcode und Deployment-Konfiguration lokal prüfen."],
@@ -92,8 +93,10 @@ export async function runChecks(mode: Mode, target: string, docs: ResearchDocume
     return results.map(item => local.find(check => check.finding === item.finding) ?? item);
   }
   const domainResults = await checkDomain(new URL(target));
+  const liveProofs = await runLiveProofs(new URL(target), docs);
+  const combined = [...domainResults, ...liveProofs];
   return [
-    ...results.map(item => domainResults.find(check => check.finding === item.finding) ?? item),
-    ...domainResults.filter(check => !results.some(item => item.finding === check.finding))
+    ...results.map(item => combined.find(check => check.finding === item.finding) ?? item),
+    ...combined.filter(check => !results.some(item => item.finding === check.finding))
   ];
 }
