@@ -116,7 +116,8 @@ async function main(): Promise<void> {
     if (!existsSync(sourceRoot)) throw new Error("Lokaler Projektpfad nicht gefunden.");
   }
   const defaultResearch = path.resolve("../ZeroDay-Library-naser.solutions-23.11.2026/english");
-  const researchInput = valueAfter("--research") ?? await ask(`Pfad zur Research-Library [${defaultResearch}]: `);
+  const configuredResearch = valueAfter("--research");
+  const researchInput = configuredResearch ?? (existsSync(defaultResearch) ? defaultResearch : await ask(`Pfad zur Research-Library [${defaultResearch}]: `));
   const researchRoot = path.resolve(researchInput || defaultResearch);
   if (!existsSync(researchRoot)) throw new Error(`Research-Pfad nicht gefunden: ${researchRoot}`);
   const docs = await loadResearch(researchRoot);
