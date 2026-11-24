@@ -1,7 +1,7 @@
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { ask, closePrompt } from "./cli.js";
-import { normalizeDomain } from "./core/target.js";
+import { assertPublicTarget, normalizeDomain } from "./core/target.js";
 import { runChecks } from "./core/engine.js";
 import { loadResearch } from "./research/loader.js";
 import { saveReport } from "./report.js";
@@ -9,7 +9,21 @@ import type { AuthorizationRecord, Mode, RunReport } from "./types.js";
 
 async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
-  console.log("\nNaser2Shell");
+  const color = (code: string, value: string): string =>
+    process.stdout.isTTY ? `\u001b[${code}m${value}\u001b[0m` : value;
+  const logo = [
+    " _   _   __ _   ___   ___   ___   ____  _   _",
+    "| \\ | | / _` | / __| / _ \\ / __| / ___|| | | |",
+    "|  \\| || (_| || (__ | (_) |\\__ \\| |    | |_| |",
+    "|_|\\__| \\__,_| \\___| \\___/ |___/ \\____| \\__,_|"
+  ];
+  console.log("");
+  console.log(color("31", logo[0]));
+  console.log(color("90", logo[1]));
+  console.log(color("97", logo[2]));
+  console.log(color("31", logo[3]));
+  console.log(color("90", "                 SECURITY RESEARCH CLI"));
+  console.log("");
   console.log("1) LOCAL");
   console.log("2) DOMAIN");
   const choice = await ask("Modus: ");
@@ -57,6 +71,7 @@ async function main(): Promise<void> {
       answer: "JA",
       confirmedAt: new Date().toISOString()
     };
+    await assertPublicTarget(url);
   } else {
     const sourceInput = await ask("Pfad zum lokalen Projekt: ");
     sourceRoot = path.resolve(sourceInput || ".");
