@@ -11,7 +11,7 @@ export interface PayloadCorpus {
   entries: Array<{ line: number; value: string; disposition: PayloadDisposition }>;
 }
 
-const ACTIVE_PAYLOAD = /<\\s*(?:script|iframe|object|embed|svg|img|audio|video|body|input|link|meta)\\b|on(?:error|load|click|mouseover|focus|begin)\\s*=|javascript\\s*:|document\\s*\\.\\s*cookie|(?:fetch|XMLHttpRequest|WebSocket)\\s*\\(|\\beval\\s*\\(|\\b(?:alert|prompt|confirm)\\s*\\(|location\\s*=|document\\s*\\.\\s*write|attacker\\.com|ha\\.ckers\\.org|biznet\\.com\\.tr/i;
+const ACTIVE_PAYLOAD = /<\s*(?:script|iframe|object|embed|svg|img|audio|video|body|input|link|meta)\b|on(?:error|load|click|mouseover|focus|begin)\s*=|javascript\s*:|document\s*\.\s*cookie|(?:fetch|XMLHttpRequest|WebSocket)\s*\(|\beval\s*\(|\b(?:alert|prompt|confirm)\s*\(|location\s*=|document\s*\.\s*write|attacker\.com|ha\.ckers\.org|biznet\.com\.tr/i;
 
 /**
  * Loads the historical XSS corpus as data. Entries are never executed by this
@@ -20,7 +20,7 @@ const ACTIVE_PAYLOAD = /<\\s*(?:script|iframe|object|embed|svg|img|audio|video|b
 export async function loadPayloadCorpus(): Promise<PayloadCorpus> {
   const file = fileURLToPath(new URL("./payloads.txt", import.meta.url));
   const raw = await readFile(file, "utf8");
-  const entries = raw.split(/\\r?\\n/).flatMap((value, index) => {
+  const entries = raw.split(/\r?\n/).flatMap((value, index) => {
     const trimmed = value.trim();
     if (!trimmed || trimmed.startsWith("#")) return [];
     return [{
