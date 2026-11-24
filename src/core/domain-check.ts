@@ -14,6 +14,30 @@ interface Probe {
   error?: string;
 }
 
+async function readLimitedBody(response: Response, limit: number): Promise<string> {
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (total < limit) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const remaining = limit - total;
+      const chunk = value.byteLength > remaining ? value.slice(0, remaining) : value;
+      chunks.push(chunk);
+      total += chunk.byteLength;
+      if (chunk.byteLength < value.byteLength) break;
+    }
+  } finally {
+    await reader.cancel().catch(() => undefined);
+  }
+  const merged = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) { merged.set(chunk, offset); offset += chunk.byteLength; }
+  return new TextDecoder().decode(merged);
+}
+
 async function probe(origin: URL, pathname: string): Promise<Probe> {
   const url = new URL(pathname, origin);
   if (url.origin !== origin.origin) throw new Error("Cross-origin probe blocked");
