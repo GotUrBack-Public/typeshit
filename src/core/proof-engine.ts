@@ -30,7 +30,7 @@ export async function runLiveProofs(target: URL, docs: ResearchDocument[]): Prom
     results.push({
       finding: "010",
       title: "CORS-Origin-Policy (OPTIONS-Proof)",
-      status: permissive ? "FINDING" : "REVIEW_REQUIRED",
+      status: permissive ? "POTENTIAL" : "REVIEW_REQUIRED",
       detail: `OPTIONS / → HTTP ${response.status}; Access-Control-Allow-Origin=${allowOrigin ?? "nicht gesetzt"}; Access-Control-Allow-Credentials=${allowCredentials ?? "nicht gesetzt"}. Ein permissiver Preflight ist ein Hinweis, allein aber kein Nachweis eines ausnutzbaren Datenzugriffs.`,
       sourceFiles: sourceFiles("010")
     });
