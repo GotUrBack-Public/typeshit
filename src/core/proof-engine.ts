@@ -14,9 +14,9 @@ async function request(url: URL, method: "GET" | "OPTIONS", headers: Record<stri
 }
 
 /** Non-mutating live metadata proofs only. No form submissions, auth attempts, uploads, token replay or race writes. */
-export async function runLiveProofs(target: URL, docs: ResearchDocument[]): Promise<CheckResult[]> {
+export async function runLiveProofs(target: URL, docs: ResearchDocument[], onProgress?: (result: CheckResult) => void): Promise<CheckResult[]> {
   const sourceFiles = (id: string): string[] => docs.filter(doc => new RegExp(`^${id}\\b`).test(doc.finding)).map(doc => doc.file);
-  const results: CheckResult[] = [];
+  const results: CheckResult[] = [];\n  const emit = (result: CheckResult): void => { results.push(result); onProgress?.(result); };
   try {
     const response = await request(target, "OPTIONS", {
       Origin: "https://naser2shell-proof.invalid",
@@ -52,7 +52,7 @@ export async function runLiveProofs(target: URL, docs: ResearchDocument[]): Prom
     ["008", "JWT-Client-Bindung", "Keine Token-Replays oder fremden Session-Tokens."],
     ["009", "Feedback Lost Update", "Keine parallelen schreibenden Requests oder Race-Condition-Tests."]
   ];
-  for (const [id, title, detail] of deferred) results.push({
+  for (const [id, title, detail] of deferred) emit({
     finding: id, title: `${title} – Proof zurückgestellt`, status: "REVIEW_REQUIRED",
     detail: `${detail} Benötigt einen ausdrücklich freigegebenen, isolierten Testablauf mit Testkonto/-daten und Cleanup.`,
     sourceFiles: sourceFiles(id)
