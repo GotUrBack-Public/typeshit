@@ -1,9 +1,10 @@
 import type { Status } from "../types.js";
 
 const BUG = [
-  "  (\\_/)",
-  "  (o.o)",
-  "  /|_|\\"
+  "   .==.",
+  "  /-^^-\\",
+  " ( o  o )",
+  "  \\_==_/"
 ];
 
 function paint(code: number, value: string): string {
@@ -21,7 +22,7 @@ export function createProgress(total: number): (finding: string, title: string, 
     const bug = BUG.map(line => paint(ratio >= 1 ? 31 : 90, line));
     const percent = `${Math.round(ratio * 100).toString().padStart(3)}%`;
     if (process.stdout.isTTY) {
-      process.stdout.write("\u001b[3A\u001b[0J");
+      process.stdout.write("\u001b[5A\u001b[0J");
       process.stdout.write(`${bug.join("\n")}\n`);
       process.stdout.write(`[${paint(ratio > 0 ? 31 : 90, track)}] ${percent}  ${completed}/${total}\n`);
       process.stdout.write(`${paint(status === "CONFIRMED" ? 31 : 90, `[${status}]`)} ${finding} ${title}\n`);
