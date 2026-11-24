@@ -28,7 +28,7 @@ export async function runLiveProofs(target: URL, docs: ResearchDocument[], onPro
     const allowCredentials = response.headers.get("access-control-allow-credentials");
     const permissive = allowOrigin === "https://naser2shell-proof.invalid" ||
       (allowOrigin === "*" && allowCredentials?.toLowerCase() === "true");
-    results.push({
+    emit({
       finding: "010",
       title: "CORS-Origin-Policy (OPTIONS-Proof)",
       status: permissive ? "POTENTIAL" : "REVIEW_REQUIRED",
@@ -36,7 +36,7 @@ export async function runLiveProofs(target: URL, docs: ResearchDocument[], onPro
       sourceFiles: sourceFiles("010")
     });
   } catch (error) {
-    results.push({
+    emit({
       finding: "010", title: "CORS-Origin-Policy (OPTIONS-Proof)", status: "REVIEW_REQUIRED",
       detail: `CORS-Metadatenprüfung nicht möglich: ${error instanceof Error ? error.message : "Unbekannter Fehler"}.`,
       sourceFiles: sourceFiles("010")
