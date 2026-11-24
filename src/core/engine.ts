@@ -93,7 +93,8 @@ export async function runChecks(mode: Mode, target: string, docs: ResearchDocume
     return results.map(item => local.find(check => check.finding === item.finding) ?? item);
   }
   const domainResults = await checkDomain(new URL(target));
-  const liveProofs = await runLiveProofs(new URL(target), docs);
+  for (const result of domainResults) onProgress?.(result);
+  const liveProofs = await runLiveProofs(new URL(target), docs, onProgress);
   const combined = [...domainResults, ...liveProofs];
   return [
     ...results.map(item => combined.find(check => check.finding === item.finding) ?? item),
