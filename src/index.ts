@@ -1,6 +1,7 @@
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { ask, closePrompt } from "./cli.js";
+import { createProgress } from "./cli/progress.js";
 import { assertPublicTarget, normalizeDomain } from "./core/target.js";
 import { runChecks } from "./core/engine.js";
 import { loadResearch } from "./research/loader.js";
@@ -110,7 +111,9 @@ async function main(): Promise<void> {
   const docs = await loadResearch(researchRoot);
   if (!docs.length) throw new Error("Keine Markdown-Dateien in der Research-Library gefunden.");
   console.log(`\nStarte sequenzielle Prüfung aller ${docs.length} Research-Dateien / Findings...\`);
-  const results = await runChecks(mode, target, docs, sourceRoot);
+  const progress = mode === "DOMAIN" ? createProgress(12) : undefined;
+  if (progress) console.log("\n\n\n\n\n\n");
+  const results = await runChecks(mode, target, docs, sourceRoot, progress ? result => progress(result.finding, result.title, result.status) : undefined);
   const report: RunReport = {
     tool: "Naser2Shell",
     startedAt,
