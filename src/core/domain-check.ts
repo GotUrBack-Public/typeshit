@@ -32,7 +32,7 @@ async function probe(origin: URL, pathname: string): Promise<Probe> {
     const contentType = response.headers.get("content-type") ?? "";
     const length = Number(response.headers.get("content-length") ?? 0);
     let body = "";
-    if (length <= MAX_BODY_BYTES && /text\\/|application\\/(json|xml|xhtml\\+xml)/i.test(contentType)) {
+    if (length <= MAX_BODY_BYTES && /text\/|application\/(json|xml|xhtml\+xml)/i.test(contentType)) {
       body = (await response.text()).slice(0, MAX_BODY_BYTES);
     } else {
       await response.body?.cancel();
@@ -51,17 +51,17 @@ function htmlInventory(html: string, origin: URL): { links: Set<string>; forms: 
   const externalForms: string[] = [];
   let forms = 0;
   let passwordForms = 0;
-  for (const match of html.matchAll(/\\b(?:href|src)\\s*=\\s*["']([^"'#]+)["']/gi)) {
+  for (const match of html.matchAll(/\b(?:href|src)\s*=\s*["']([^"'#]+)["']/gi)) {
     try {
       const found = new URL(match[1], origin);
       if (found.origin === origin.origin && ["http:", "https:"].includes(found.protocol)) links.add(found.pathname);
     } catch { /* Ignore malformed markup. */ }
   }
-  for (const match of html.matchAll(/<form\\b([^>]*)>/gi)) {
+  for (const match of html.matchAll(/<form\b([^>]*)>/gi)) {
     forms++;
-    const action = match[1].match(/\\baction\\s*=\\s*["']([^"']*)["']/i)?.[1] ?? "";
+    const action = match[1].match(/\baction\s*=\s*["']([^"']*)["']/i)?.[1] ?? "";
     const block = html.slice(match.index ?? 0, (match.index ?? 0) + 12_000);
-    if (/<input\\b[^>]*type\\s*=\\s*["']password["']/i.test(block)) passwordForms++;
+    if (/<input\b[^>]*type\s*=\s*["']password["']/i.test(block)) passwordForms++;
     try {
       const target = new URL(action || origin.href, origin);
       if (target.origin !== origin.origin) externalForms.push(target.origin);
@@ -94,9 +94,9 @@ export async function checkDomain(url: URL): Promise<CheckResult[]> {
     const cookies = headers.get("set-cookie") ?? "";
     const cookieIssues: string[] = [];
     if (cookies) {
-      if (!/;\\s*httponly/i.test(cookies)) cookieIssues.push("HttpOnly");
-      if (!/;\\s*secure/i.test(cookies)) cookieIssues.push("Secure");
-      if (!/;\\s*samesite=/i.test(cookies)) cookieIssues.push("SameSite");
+      if (!/;\s*httponly/i.test(cookies)) cookieIssues.push("HttpOnly");
+      if (!/;\s*secure/i.test(cookies)) cookieIssues.push("Secure");
+      if (!/;\s*samesite=/i.test(cookies)) cookieIssues.push("SameSite");
     }
     results.push({
       finding: "006", title: "Cookie-Attribute (öffentliche Antwort)",
