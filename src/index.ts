@@ -59,7 +59,7 @@ async function main(): Promise<void> {
         target,
         authorization,
         researchFiles: 0,
-        results: [{ finding: "AUTH", title: "Autorisierungsprüfung", status: "BLOCKED", detail: "Keine exakte JA-Bestätigung; es wurde kein Netzwerkzugriff ausgeführt.", sourceFiles: [] }]
+        results: [{ finding: "AUTH", title: "Autorisierungsprüfung", status: "BLOCKED", detail: "Zielgebundene Autorisierung oder Live-Proof-Umfang nicht exakt bestätigt; es wurde kein Netzwerkzugriff ausgeführt.", sourceFiles: [] }]
       };
       const base = await saveReport(report);
       throw new Error(`Abgebrochen. Kein DOMAIN-Scan. Abbruchbericht: ${base}.md`);
