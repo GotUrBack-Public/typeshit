@@ -23,10 +23,22 @@ async function main(): Promise<void> {
     const index = args.indexOf(flag);
     return index >= 0 ? args[index + 1] : undefined;
   };
-  const allMode = args.includes("--all");
-  const targetArg = valueAfter("--target");
+  const exploitCommand = args[0] === "exploit";
+  const targetArg = exploitCommand ? args[1] : valueAfter("--target");
+  const selector = exploitCommand ? args[2] : (args.includes("--all") ? "zerodays#all" : undefined);
+  const forceCampaign = args.includes("--force");
+  const allFindings = selector === "zerodays#all";
   let mode: Mode;
-  if (targetArg && allMode) {
+  if (exploitCommand) {
+    if (!targetArg || !allFindings) {
+      throw new Error("Verwendung: naser2shell exploit <url> zerodays#all --force");
+    }
+    if (!forceCampaign) {
+      throw new Error("Für eine vollständige sequenzielle Kampagne muss --force angegeben werden. Autorisierungsprüfungen bleiben trotzdem verpflichtend.");
+    }
+    mode = "DOMAIN";
+    console.log("Modus: vollständige sequenzielle ZeroDay-Proof-Kampagne (--force)");
+  } else if (targetArg && args.includes("--all")) {
     mode = "DOMAIN";
     console.log("Modus: vollständiger DOMAIN-Lauf (--all)");
   } else if (args.length === 0) {
@@ -36,7 +48,7 @@ async function main(): Promise<void> {
     if (choice !== "1" && choice !== "2") throw new Error("Ungültige Auswahl.");
     mode = choice === "1" ? "LOCAL" : "DOMAIN";
   } else {
-    throw new Error("Verwendung: npm start -- --target https://example.com --all");
+    throw new Error("Verwendung: naser2shell exploit <url> zerodays#all --force");
   }
   let target = "local";
   let sourceRoot: string | undefined;
