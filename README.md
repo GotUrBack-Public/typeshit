@@ -23,6 +23,16 @@ Die Engine übermittelt keine Formulare, führt keine Login-Versuche oder Upload
 - Findings aus der Research-Library werden nicht allein aufgrund ihres Vorhandenseins als bestätigt markiert.
 - Live-Proofs verwenden aktuell ausschließlich nicht-mutierende Metadatenprüfungen. CORS wird per OPTIONS-Preflight untersucht. Login-, Upload-, Formular-, CSRF-, JWT-Replay-, Race- und Lasttests werden nicht gegen Live-Ziele ausgeführt.
 
+## Ein-Befehl-Modus
+
+Nach der Installation kannst du den vollständigen DOMAIN-Lauf mit einem Befehl starten:
+
+```sh
+npm start -- --target https://example.com --all
+```
+
+Naser2Shell liest dann die gesamte konfigurierte Research-Library ein und verarbeitet die Finding-Liste in einem Lauf. Die zielgebundenen Autorisierungsbestätigungen werden weiterhin interaktiv abgefragt. `--research /pfad/zur/english-library` kann optional den Library-Pfad festlegen. Einzelne Finding-Klassen, die aktive Schreibzugriffe, Login-Versuche, Uploads, CSRF-Auslösung, Token-Replay oder Last/Race-Verhalten erfordern, werden im aktuellen Stand ausdrücklich als zurückgestellt dokumentiert und nicht als erfolgreich geprüft ausgegeben.
+
 ## Termux
 
 ```sh
