@@ -93,11 +93,12 @@ export async function runChecks(mode: Mode, target: string, docs: ResearchDocume
     return results.map(item => local.find(check => check.finding === item.finding) ?? item);
   }
   const domainResults = await checkDomain(new URL(target));
-  for (const result of domainResults) onProgress?.(result);
-  const liveProofs = await runLiveProofs(new URL(target), docs, onProgress);
+  const liveProofs = await runLiveProofs(new URL(target), docs);
   const combined = [...domainResults, ...liveProofs];
+  const ordered = results.map(item => combined.find(check => check.finding === item.finding) ?? item);
+  for (const result of ordered) onProgress?.(result);
   return [
-    ...results.map(item => combined.find(check => check.finding === item.finding) ?? item),
+    ...ordered,
     ...combined.filter(check => !results.some(item => item.finding === check.finding))
   ];
 }
