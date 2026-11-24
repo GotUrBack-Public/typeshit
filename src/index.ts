@@ -120,7 +120,6 @@ async function main(): Promise<void> {
   const researchInput = configuredResearch ?? (existsSync(defaultResearch) ? defaultResearch : await ask(`Pfad zur Research-Library [${defaultResearch}]: `));
   const researchRoot = path.resolve(researchInput || defaultResearch);
   if (!existsSync(researchRoot)) throw new Error(`Research-Pfad nicht gefunden: ${researchRoot}`);
-  console.log("\\nReading Library's...");
   console.log("\nReading Library's...");
   const docs = await loadResearch(researchRoot);
   if (!docs.length) throw new Error("Keine Markdown-Dateien in der Research-Library gefunden.");
@@ -150,7 +149,7 @@ async function main(): Promise<void> {
   };
   const base = await saveReport(report);
   const successful = results.filter(result => result.status === "CONFIRMED").length;
-  console.log(`\\n${successful}/11 exploits were successful.\\n`);
+  console.log(`\n${successful}/11 exploits were successful.\n`);
   console.log("Findings:");
   const findingsFound = results.filter(result => ["CONFIRMED", "FINDING", "POTENTIAL"].includes(result.status));
   if (!findingsFound.length) console.log("Keine bestätigten oder potenziellen Findings gemeldet.");
@@ -158,9 +157,9 @@ async function main(): Promise<void> {
     console.log(`[${result.status}] ${result.finding} ${result.title}`);
     console.log(`  ${result.detail}`);
   }
-  console.log("\\nAll checks:");
+  console.log("\nAll checks:");
   for (const result of results) console.log(`[${result.status}] ${result.finding} ${result.title}`);
-  console.log(`\\nReport: ${base}.md`);
+  console.log(`\nReport: ${base}.md`);
 }
 
 main().catch(error => {
