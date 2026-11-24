@@ -131,7 +131,7 @@ async function main(): Promise<void> {
   console.log(`\n11 ZeroDays found!\n`);
   const payloadCorpus = await loadPayloadCorpus();
   console.log("Payload corpus loaded: " + payloadCorpus.total + " entries (" + payloadCorpus.unique + " unique).");
-  console.log("Automatic live execution blocked for " + payloadCorpus.blockedActive + " active XSS payloads; " + payloadCorpus.reviewRequired + " require manual review.\\n");
+  console.log("Automatic live execution blocked for " + payloadCorpus.blockedActive + " active XSS payloads; " + payloadCorpus.reviewRequired + " require manual review.\n");
   console.log("Making a Plan...\n");
   console.log(`Start exploiting ${target}\n`);
   const progress = mode === "DOMAIN" ? createProgress(11) : undefined;
