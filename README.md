@@ -16,11 +16,12 @@ Die Engine übermittelt keine Formulare, führt keine Login-Versuche oder Upload
 
 ## Sicherheitsgrenzen
 
-- DOMAIN verlangt vor jedem Lauf eine ausdrückliche Autorisierungsbestätigung.
+- DOMAIN verlangt eine zielgebundene Autorisierungsphrase (`AUTORISIERT <hostname>`) und eine zweite, getrennte Freigabe des Live-Proof-Umfangs (`LIVE-PROOF <hostname>`). Das ist eine bewusste Bestätigung, keine kryptografische 2FA.
 - Requests bleiben auf dem eingegebenen Origin; Redirects werden nicht automatisch verfolgt.
 - Anzahl und Laufzeit der Requests sowie gelesene Antwortgrößen sind begrenzt.
 - HTML-Formulare werden ausschließlich inventarisiert, niemals abgesendet.
 - Findings aus der Research-Library werden nicht allein aufgrund ihres Vorhandenseins als bestätigt markiert.
+- Live-Proofs verwenden aktuell ausschließlich nicht-mutierende Metadatenprüfungen. CORS wird per OPTIONS-Preflight untersucht. Login-, Upload-, Formular-, CSRF-, JWT-Replay-, Race- und Lasttests werden nicht gegen Live-Ziele ausgeführt.
 
 ## Termux
 
@@ -42,4 +43,4 @@ git clone https://github.com/GotUrBack-Public/ZeroDay-Library-naser.solutions-23
 npm start
 ```
 
-LOCAL fragt nach dem lokalen Projektpfad. DOMAIN fragt nach einer ausdrücklichen Autorisierung; nur die exakte Eingabe `JA` startet den Lauf. Reports liegen in `reports/`.
+LOCAL fragt nach dem lokalen Projektpfad. DOMAIN verlangt zwei zielgebundene Eingaben: `AUTORISIERT <hostname>` und `LIVE-PROOF <hostname>`. Die zweite Freigabe gilt ausdrücklich nur für nicht-mutierende Live-Prüfungen. Reports liegen in `reports/`.
