@@ -1,7 +1,7 @@
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { ask, closePrompt } from "./cli.js";
-import { normalizeDomain } from "./core/target.js";
+import { assertPublicTarget, normalizeDomain } from "./core/target.js";
 import { runChecks } from "./core/engine.js";
 import { loadResearch } from "./research/loader.js";
 import { saveReport } from "./report.js";
@@ -26,6 +26,7 @@ async function main(): Promise<void> {
   };
   if (mode === "DOMAIN") {
     const url = normalizeDomain(await ask("Zieldomain: "));
+    await assertPublicTarget(url);
     target = url.origin;
     authorization = {
       required: true,
