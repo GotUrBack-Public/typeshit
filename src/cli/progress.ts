@@ -27,9 +27,9 @@ export function createProgress(total: number): (finding: string, title: string, 
       process.stdout.write("\u001b[6A\u001b[0J");
       process.stdout.write(`${bug.join("\n")}\n`);
       process.stdout.write(`[${paint(stage, track)}] ${percent}  ${completed}/${total}\n`);
-      process.stdout.write(`${paint(status === "CONFIRMED" ? "31;1" : "90", `[${status}]`)} ${finding} ${title}\n`);
+      process.stdout.write(`${paint(status === "CONFIRMED" ? "31;1" : "90", `Exploiting ${completed}/${total} [${status}]`)} ${finding} ${title}\n`);
     } else {
-      console.log(`[${completed}/${total}] [${status}] ${finding} ${title}`);
+      console.log(`Exploiting ${completed}/${total} [${status}] ${finding} ${title}`);
     }
   };
 }
