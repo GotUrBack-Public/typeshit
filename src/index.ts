@@ -121,21 +121,21 @@ async function main(): Promise<void> {
   const researchRoot = path.resolve(researchInput || defaultResearch);
   if (!existsSync(researchRoot)) throw new Error(`Research-Pfad nicht gefunden: ${researchRoot}`);
   console.log("\\nReading Library's...");
+  console.log("\nReading Library's...");
   const docs = await loadResearch(researchRoot);
   if (!docs.length) throw new Error("Keine Markdown-Dateien in der Research-Library gefunden.");
-  const zeroDayIds = [...new Set(docs.map(doc => doc.finding.match(/^(\\d{3})/)?.[1]).filter((id): id is string => Boolean(id)))].sort();
+  const zeroDayIds = [...new Set(docs.map(doc => doc.finding.match(/^(\d{3})/)?.[1]).filter((id): id is string => Boolean(id)))].sort();
   if (zeroDayIds.length !== 11) {
     throw new Error(`Erwartet wurden 11 ZeroDays, gefunden wurden ${zeroDayIds.length}. Research-Library prüfen.`);
   }
-  console.log(`\\n11 ZeroDays found!\\n`);
-  console.log("Making a Plan...\\n");
-  console.log(`Start exploiting ${target}\\n`);
+  console.log(`\n11 ZeroDays found!\n`);
+  console.log("Making a Plan...\n");
+  console.log(`Start exploiting ${target}\n`);
   const progress = mode === "DOMAIN" ? createProgress(11) : undefined;
-  if (progress) console.log("\\n\\n\\n\\n\\n\\n");
+  if (progress) console.log("\n\n\n\n\n\n");
   let exploitIndex = 0;
   const results = await runChecks(mode, target, docs, sourceRoot, progress ? result => {
     exploitIndex++;
-    console.log(`Exploiting ${exploitIndex}/11`);
     progress(result.finding, result.title, result.status);
   } : undefined);
   const report: RunReport = {
