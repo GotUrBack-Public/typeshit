@@ -121,7 +121,7 @@ async function main(): Promise<void> {
   if (!existsSync(researchRoot)) throw new Error(`Research-Pfad nicht gefunden: ${researchRoot}`);
   const docs = await loadResearch(researchRoot);
   if (!docs.length) throw new Error("Keine Markdown-Dateien in der Research-Library gefunden.");
-  console.log(`\nStarte sequenzielle Prüfung aller ${docs.length} Research-Dateien / Findings...\`);
+  console.log(`\nStarte sequenzielle Prüfung aller ${docs.length} Research-Dateien / Findings...`);
   const progress = mode === "DOMAIN" ? createProgress(11) : undefined;
   if (progress) console.log("\n\n\n\n\n\n");
   const results = await runChecks(mode, target, docs, sourceRoot, progress ? result => progress(result.finding, result.title, result.status) : undefined);
