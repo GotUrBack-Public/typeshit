@@ -16,7 +16,8 @@ async function request(url: URL, method: "GET" | "OPTIONS", headers: Record<stri
 /** Non-mutating live metadata proofs only. No form submissions, auth attempts, uploads, token replay or race writes. */
 export async function runLiveProofs(target: URL, docs: ResearchDocument[], onProgress?: (result: CheckResult) => void): Promise<CheckResult[]> {
   const sourceFiles = (id: string): string[] => docs.filter(doc => new RegExp(`^${id}\\b`).test(doc.finding)).map(doc => doc.file);
-  const results: CheckResult[] = [];\n  const emit = (result: CheckResult): void => { results.push(result); onProgress?.(result); };
+  const results: CheckResult[] = [];
+  const emit = (result: CheckResult): void => { results.push(result); onProgress?.(result); };
   try {
     const response = await request(target, "OPTIONS", {
       Origin: "https://naser2shell-proof.invalid",
