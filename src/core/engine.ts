@@ -92,5 +92,8 @@ export async function runChecks(mode: Mode, target: string, docs: ResearchDocume
     return results.map(item => local.find(check => check.finding === item.finding) ?? item);
   }
   const domainResults = await checkDomain(new URL(target));
-  return results.map(item => domainResults.find(check => check.finding === item.finding) ?? item);
+  return [
+    ...results.map(item => domainResults.find(check => check.finding === item.finding) ?? item),
+    ...domainResults.filter(check => !results.some(item => item.finding === check.finding))
+  ];
 }
