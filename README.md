@@ -54,3 +54,10 @@ npm start
 ```
 
 LOCAL fragt nach dem lokalen Projektpfad. DOMAIN verlangt zwei zielgebundene Eingaben: `AUTORISIERT <hostname>` und `LIVE-PROOF <hostname>`. Die zweite Freigabe gilt ausdrücklich nur für nicht-mutierende Live-Prüfungen. Reports liegen in `reports/`.
+
+
+## XSS-Payload-Corpus
+
+Die Datei `src/payloads.txt` wird beim Start als Payload-Corpus eingelesen. Der Loader zählt Einträge und Duplikate und klassifiziert aktive Browser-Payloads (z. B. Script-/Event-Handler, JavaScript-URLs, Cookie-Zugriffe, externe Script-Quellen und Code-Ausführung) als `BLOCKED_ACTIVE`. Nicht eindeutig klassifizierbare Einträge erhalten `REVIEW_REQUIRED`.
+
+Wichtig: Das Einlesen ist keine Ausführung. Die historische Sammlung enthält aktive XSS-Payloads, darunter Varianten zum Zugriff auf `document.cookie` und zum Nachladen externer Inhalte. Deshalb werden diese Einträge nicht automatisch an Live-Ziele gesendet. Für eine echte XSS-Verifikation ist ein isolierter Test-Endpunkt mit kontrolliertem Browser und einem nicht-sensiblen Canary erforderlich. Die übrigen ZeroDay-Prüfungen verwenden weiterhin ihre jeweils passenden Proof-Module; eine XSS-Payload ist kein universeller Exploit für die Findings 001–011.
