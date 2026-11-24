@@ -28,10 +28,10 @@ Die Engine übermittelt keine Formulare, führt keine Login-Versuche oder Upload
 Nach der Installation kannst du den vollständigen DOMAIN-Lauf mit einem Befehl starten:
 
 ```sh
-npm start -- --target https://example.com --all
+naser2shell exploit https://example.com zerodays#all --force
 ```
 
-Naser2Shell liest dann die gesamte konfigurierte Research-Library ein und verarbeitet die Finding-Liste in einem Lauf. Die zielgebundenen Autorisierungsbestätigungen werden weiterhin interaktiv abgefragt. `--research /pfad/zur/english-library` kann optional den Library-Pfad festlegen. Einzelne Finding-Klassen, die aktive Schreibzugriffe, Login-Versuche, Uploads, CSRF-Auslösung, Token-Replay oder Last/Race-Verhalten erfordern, werden im aktuellen Stand ausdrücklich als zurückgestellt dokumentiert und nicht als erfolgreich geprüft ausgegeben.
+Naser2Shell liest dann die gesamte konfigurierte Research-Library ein und verarbeitet die Finding-Liste sequenziell in einem Lauf. `--force` aktiviert die vollständige Kampagne, hebt aber weder die zielgebundene Autorisierungsabfrage noch die Sicherheitsgrenzen der einzelnen Proof-Module auf. Die Kurzform setzt voraus, dass `naser2shell` global installiert oder als ausführbares CLI verfügbar ist; alternativ kann der Aufruf über das npm-Script erfolgen. Die zielgebundenen Autorisierungsbestätigungen werden weiterhin interaktiv abgefragt. `--research /pfad/zur/english-library` kann optional den Library-Pfad festlegen. Einzelne Finding-Klassen, die aktive Schreibzugriffe, Login-Versuche, Uploads, CSRF-Auslösung, Token-Replay oder Last/Race-Verhalten erfordern, werden im aktuellen Stand ausdrücklich als zurückgestellt dokumentiert und nicht als erfolgreich geprüft ausgegeben.
 
 ## Termux
 
