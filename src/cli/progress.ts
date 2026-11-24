@@ -19,7 +19,7 @@ export function createProgress(total: number): (finding: string, title: string, 
     const ratio = Math.min(1, completed / Math.max(total, 1));
     const filled = Math.round(ratio * width);
     const track = "█".repeat(filled) + "░".repeat(width - filled);
-    const bug = BUG.map(line => paint(ratio >= 1 ? 31 : 90, line));
+    const bugChars = BUG.reduce((sum, line) => sum + line.length, 0);\n    let seen = 0;\n    const bug = BUG.map(line => [...line].map(char => {\n      seen++;\n      return paint(seen <= ratio * bugChars ? 31 : 90, char);\n    }).join(""));
     const percent = `${Math.round(ratio * 100).toString().padStart(3)}%`;
     if (process.stdout.isTTY) {
       process.stdout.write("\u001b[6A\u001b[0J");
