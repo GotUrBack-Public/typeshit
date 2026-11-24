@@ -74,7 +74,7 @@ async function localSourceChecks(root: string, docs: ResearchDocument[]): Promis
   return output;
 }
 
-export async function runChecks(mode: Mode, target: string, docs: ResearchDocument[], sourceRoot?: string): Promise<CheckResult[]> {
+export async function runChecks(mode: Mode, target: string, docs: ResearchDocument[], sourceRoot?: string, onProgress?: (result: CheckResult) => void): Promise<CheckResult[]> {
   const byFinding = new Map<string, string[]>();
   for (const doc of docs) {
     const match = doc.finding.match(/^(\d{3})/);
