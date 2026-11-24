@@ -6,6 +6,7 @@ import { assertPublicTarget, normalizeDomain } from "./core/target.js";
 import { runChecks } from "./core/engine.js";
 import { loadResearch } from "./research/loader.js";
 import { saveReport } from "./report.js";
+import { loadPayloadCorpus } from "./payloads.js";
 import type { AuthorizationRecord, Mode, RunReport } from "./types.js";
 
 async function main(): Promise<void> {
