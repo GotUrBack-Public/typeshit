@@ -44,8 +44,13 @@ async function main(): Promise<void> {
     };
     console.log("\nAUTORISIERUNG ERFORDERLICH");
     console.log(`Ziel: ${url.origin}`);
-    const answer = await ask("Bist du Eigentümer oder ausdrücklich zur Prüfung autorisiert? Tippe JA: ");
-    if (answer !== "JA") {
+    const authorizationPhrase = `AUTORISIERT ${url.hostname}`;
+    const answer = await ask(`Bist du Eigentümer oder ausdrücklich zur Prüfung autorisiert? Tippe exakt "${authorizationPhrase}": `);
+    const scopePhrase = `LIVE-PROOF ${url.hostname}`;
+    const scopeAnswer = answer === authorizationPhrase
+      ? await ask(`Bestätige den Live-Proof-Umfang (nur nicht-mutierende Prüfungen). Tippe exakt "${scopePhrase}": `)
+      : "";
+    if (answer !== authorizationPhrase || scopeAnswer !== scopePhrase) {
       const report: RunReport = {
         tool: "Naser2Shell",
         startedAt,
@@ -62,7 +67,7 @@ async function main(): Promise<void> {
     authorization = {
       ...authorization,
       confirmed: true,
-      answer: "JA",
+      answer: `${authorizationPhrase}; ${scopePhrase}`,
       confirmedAt: new Date().toISOString()
     };
     await assertPublicTarget(url);
